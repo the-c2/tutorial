@@ -3,9 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FOREX TRADE</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <div class="container">
+        <h1>FOREX TRADE</h1>
+        <form id="trade-form">
+            <label for="currency-pair">Currency Pair:</label>
+            <input type="text" id="currency-pair" name="currency-pair" required>
+
+            <label for="trade-type">Trade Type:</label>
+            <select id="trade-type" name="trade-type" required>
+                <option value="buy">Buy</option>
+                <option value="sell">Sell</option>
+            </select>
+
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+
+            <button type="submit">Submit Trade</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <h2>trade history</h2>
+    <table id="trade-history" border="1">
+        <thead>
+            <tr>
+                <th>Currency Pair</th>
+                <th>Trade Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Trade history will be populated here -->
+        </tbody>
+         <tfoot>
+            <tr>
+                <td colspan="3">Total Trades</td>
+                <td id="total-trades">0</td>
+            </tr>
+            <tr>
+                <td colspan="3">Total Amount</td>
+                <td id="total-amount">0</td>
+            </tr>
+        </tfoot>
+    </table>
+    <h3>Trade Chart</h3>
+    <canvas id="trade-chart" width="400" height="200"></canvas>
+    <script>
+        // Initialize trade history array
+        let tradeHistory = [];
+
+        // Function to update trade history table and chart
+        function updateTradeHistory() {
+            const tbody = document.querySelector('#trade-history tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            let totalTrades = 0;
+            let totalAmount = 0;
+
+            tradeHistory.forEach(trade => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${trade.currencyPair}</td>
+                    <td>${trade.tradeType}</td>
+                    <td>${trade.amount}</td>
+                    <td>${new Date(trade.date).toLocaleString()}</td>
+                `;
+                tbody.appendChild(row);
+
+                totalTrades++;
+                totalAmount += parseFloat(trade.amount);
+            });
+
+            document.getElementById('total-trades').innerText = totalTrades;
+            document.getElementById('total-amount').innerText = totalAmount.toFixed(2);
+
+            // Update chart
+            const ctx = document.getElementById('trade-chart').getContext('2d');
+            const labels = tradeHistory.map(trade => new Date(trade.date).toLocaleString());
+            const data = tradeHistory.map(trade => parseFloat(trade.amount));
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Trade Amount',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('trade-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const currencyPair = document.getElementById('currency-pair').value;
+            const tradeType = document.getElementById('trade-type').value;
+            const amount = document.getElementById('amount').value;
+
+            // Add trade to history
+            tradeHistory.push({
+                currencyPair,
+                tradeType,
+                amount,
+                date: new Date()
+            });
+
+            // Show  
+            Swal.fire({
+                title: 'Trade Submitted',
+                text: `You have ${tradeType} ${amount} of ${currencyPair}`,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        // Update trade history table and chart
+        updateTradeHistory();
+        // Clear form fields
+        document.getElementById('trade-form').reset();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <h4>HOW TO START FOREX TRADE</h4>
+    <p>To start forex trading, follow these steps:</p>
+    <ol>
+        <li>Choose a reliable forex broker.</li>
+        <li>Open a trading account.</li>
+        <li>Deposit funds into your account.</li>
+        <li>Download and install trading software (like MetaTrader).</li>
+        <li>Learn about forex trading strategies and analysis.</li>
+        <li>Start trading with a demo account to practice.</li>
+        <li>Once comfortable, start trading with real money.</li>
+        <li>Monitor your trades and manage risk effectively.</li>
+        <li>Keep learning and improving your trading skills.</li>
+        <li>Stay updated with market news and trends.</li>
+    </ol>
+    <p>Remember, forex trading involves risk, and it's important to trade responsibly.</p>
+    <h4>FOREX TRADING STRATEGIES</h4>
+    <p>Here are some common forex trading strategies:</p>
+    <ul>
+        <li><strong>Scalping:</strong> Making quick trades to profit from small price movements.</li>
+        <li><strong>Day Trading:</strong> Buying and selling currencies within the same trading day.</li>
+        <li><strong>Swing Trading:</strong> Holding positions for several days to capture short-term market moves.</li>
+        <li><strong>Position Trading:</strong> Long-term trading based on fundamental analysis.</li>
+        <li><strong>Trend Following:</strong> Identifying and following the direction of the market trend.</li>
+        <li><strong>Range Trading:</strong> Buying at support levels and selling at resistance levels.</li>
+        <li><strong>Breakout Trading:</strong> Entering trades when the price breaks through key support or resistance levels.</li>
+        <li><strong>News Trading:</strong> Trading based on economic news releases and events.</li>
+        <li><strong>Carry Trade:</strong> Borrowing in a low-interest-rate currency and investing in a high-interest-rate currency.</li>
+        <li><strong>Technical Analysis:</strong> Using charts and indicators to analyze price movements.</li>
+        <li><strong>Fundamental Analysis:</strong> Analyzing economic indicators and news to make trading decisions.</li>
+        <li><strong>Algorithmic Trading:</strong> Using automated systems to execute trades based on predefined criteria.</li>
+        <li><strong>Risk Management:</strong> Implementing strategies to manage risk and protect capital.</li>
+        <li><strong>Position Sizing:</strong> Determining the amount of capital to risk on each trade.</li>
+        <li><strong>Stop Loss and Take Profit:</strong> Setting orders to limit losses and secure profits.</li>
+        <li><strong>Psychological Discipline:</strong> Maintaining emotional control and discipline while trading.</li>
+        <li><strong>Backtesting:</strong> Testing trading strategies on historical data to evaluate performance.</li>
+        <li><strong>Demo Trading:</strong> Practicing trading strategies on a demo account before using real money.</li>
+        <li><strong>Continuous Learning:</strong> Staying updated with market trends and improving trading skills.</li>
+        <li><strong>Networking:</strong> Connecting with other traders and sharing insights and experiences.</li>
+        <li><strong>Journaling:</strong> Keeping a trading journal to track trades and analyze performance.</li>
+        <li><strong>Patience and Persistence:</strong> Being patient and persistent in achieving trading goals.</li>
+        <li><strong>Adaptability:</strong> Being flexible and adapting to changing market conditions.</li>
+        <li><strong>Discipline:</strong> Sticking to your trading plan and avoiding impulsive decisions.</li>
+        <li><strong>Emotional Control:</strong> Managing emotions like fear and greed while trading.</li>
+        <li><strong>Market Research:</strong> Conducting thorough research before making trading decisions.</li>
+                  
+
+
+
+            
+
 </body>
 </html>
